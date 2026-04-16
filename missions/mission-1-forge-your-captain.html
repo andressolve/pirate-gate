@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pirate Gate — Mission 1: Forge Your Captain</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  :root {
+    --bg: #0a0a14;
+    --surface: #111122;
+    --surface2: #1a1a30;
+    --border: #282848;
+    --accent: #d63031;
+    --accent2: #0984e3;
+    --accent3: #00b894;
+    --text: #e8e8f2;
+    --text-muted: #7a7a9e;
+    --text-dim: #464868;
+    --gold: #fdcb6e;
+    --pirate: #d63031;
+    --ocean: #0984e3;
+    --straw: #fdcb6e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(214,48,49,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(9,132,227,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(253,203,110,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ---- HEADER ---- */
+  header { margin-bottom: 48px; }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--pirate);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--pirate);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 8vw, 68px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    color: var(--text);
+  }
+
+  h1 span { color: var(--pirate); }
+  h1 .straw { color: var(--straw); }
+
+  h1 .mission-num {
+    font-size: 0.38em;
+    font-weight: 600;
+    color: var(--ocean);
+    letter-spacing: 0;
+    display: block;
+    margin-top: 8px;
+  }
+
+  .subtitle {
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 580px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .subtitle strong { color: var(--text); font-weight: 500; }
+
+  /* ---- QUEST BAR ---- */
+  .quest-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .quest-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .quest-missions {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .quest-pip {
+    width: 28px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .quest-pip.active {
+    background: var(--pirate);
+    border-color: var(--pirate);
+    box-shadow: 0 0 8px rgba(214,48,49,0.3);
+  }
+
+  .quest-pip.future { opacity: 0.4; }
+
+  .quest-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--pirate);
+    white-space: nowrap;
+  }
+
+  /* ---- RECAP ---- */
+  .recap-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .recap-icon { font-size: 20px; line-height: 1; margin-top: 2px; }
+
+  .recap-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .recap-content strong { color: var(--accent3); font-weight: 500; }
+
+  .recap-pips { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+  .recap-pip {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: rgba(34,211,168,0.08);
+    border: 1px solid rgba(34,211,168,0.25);
+    color: var(--accent3);
+  }
+
+  /* ---- RULE CARD ---- */
+  .rule-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .rule-icon { font-size: 28px; line-height: 1; margin-top: 2px; }
+
+  .rule-text h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .rule-text p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ---- PROGRESS ---- */
+  .progress-area {
+    margin-bottom: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1; height: 5px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pirate), var(--ocean));
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--pirate);
+    white-space: nowrap;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* ---- SECTIONS ---- */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 36px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ---- MISSION CARDS ---- */
+  .mission-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .mission-card.done { opacity: 0.55; border-color: var(--border); }
+  .mission-card.done .card-number { background: var(--accent3); color: var(--bg); }
+  .mission-card.done .card-number::after { content: '\2713'; }
+
+  .card-header {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .card-header:hover { background: var(--surface2); }
+
+  .card-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    width: 64px;
+    min-width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .card-meta { padding: 18px 20px; flex: 1; }
+
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .card-badge {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 99px;
+    border: 1px solid;
+  }
+
+  .badge-red { color: var(--pirate); border-color: var(--pirate); background: rgba(214,48,49,0.08); }
+  .badge-blue { color: var(--ocean); border-color: var(--ocean); background: rgba(9,132,227,0.08); }
+  .badge-green { color: var(--accent3); border-color: var(--accent3); background: rgba(0,184,148,0.08); }
+  .badge-gold { color: var(--straw); border-color: var(--straw); background: rgba(253,203,110,0.08); }
+
+  .card-chevron {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    color: var(--text-dim);
+    font-size: 20px;
+    transition: transform 0.3s, color 0.2s;
+  }
+
+  .mission-card.open .card-chevron { transform: rotate(90deg); color: var(--pirate); }
+
+  /* ---- CARD BODY ---- */
+  .card-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 24px 24px 20px;
+    animation: slideDown 0.25s ease;
+  }
+
+  .mission-card.open .card-body { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-body p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .card-body strong { color: var(--text); font-weight: 500; }
+
+  /* ---- PROMPT / SAY BOX ---- */
+  .say-box {
+    background: var(--bg);
+    border: 1px solid rgba(9,132,227,0.3);
+    border-left: 3px solid var(--ocean);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+
+  .say-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ocean);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .say-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .say-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* ---- STEPS ---- */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 16px 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pirate);
+    margin-top: 1px;
+  }
+
+  /* ---- TIPS ---- */
+  .tip-box {
+    background: rgba(9,132,227,0.08);
+    border: 1px solid rgba(9,132,227,0.3);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+  }
+
+  .tip-box.tip-green { background: rgba(0,184,148,0.06); border-color: rgba(0,184,148,0.25); }
+  .tip-box.tip-red { background: rgba(214,48,49,0.06); border-color: rgba(214,48,49,0.25); }
+  .tip-box.tip-gold { background: rgba(253,203,110,0.06); border-color: rgba(253,203,110,0.25); }
+
+  .tip-icon { font-size: 16px; line-height: 1; margin-top: 1px; }
+
+  .tip-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .tip-content strong { color: var(--ocean); font-weight: 500; }
+  .tip-green .tip-content strong { color: var(--accent3); }
+  .tip-red .tip-content strong { color: var(--pirate); }
+  .tip-gold .tip-content strong { color: var(--straw); }
+
+  /* ---- COMPLETE BUTTON ---- */
+  .complete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--accent3);
+    border-radius: 8px;
+    color: var(--accent3);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .complete-btn:hover { background: var(--accent3); color: var(--bg); }
+  .mission-card.done .complete-btn { border-color: var(--text-dim); color: var(--text-dim); }
+
+  /* ---- TOOL CHIPS ---- */
+  .tool-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+
+  .chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 99px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  /* ---- ANIMATION TABLE ---- */
+  .anim-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .anim-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .anim-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(40,40,66,0.5);
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .anim-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--pirate);
+  }
+
+  /* ---- XP ---- */
+  .xp-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .xp-pip {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: all 0.3s;
+  }
+
+  .xp-pip.earned {
+    background: rgba(0,184,148,0.1);
+    border-color: rgba(0,184,148,0.3);
+    color: var(--accent3);
+  }
+
+  /* ---- WATCH LIST ---- */
+  .watch-list { list-style: none; margin: 14px 0; }
+
+  .watch-list li {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .watch-list li .watch-icon {
+    font-size: 14px;
+    margin-top: 3px;
+    min-width: 18px;
+    text-align: center;
+  }
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="eyebrow">// pirate gate: one piece</div>
+    <h1>Forge Your <span>Captain</span><span class="mission-num">Mission 1</span></h1>
+    <p class="subtitle">Before a captain can sail, he must exist. Design <strong>Monkey D. Luffy</strong> &mdash; your version, for your game &mdash; from concept art to animated 3D fighter. Everything happens in one Claude Code conversation. You describe, Claude builds.</p>
+  </header>
+
+  <!-- QUEST PROGRESS -->
+  <div class="quest-bar">
+    <span class="quest-label">Studio Build</span>
+    <div class="quest-missions">
+      <div class="quest-pip active" title="Mission 1: Forge Your Captain"></div>
+      <div class="quest-pip future" title="Build 0.1: The Grand Line"></div>
+      <div class="quest-pip future" title="Build 0.2: Luffy Walks"></div>
+      <div class="quest-pip future" title="Build 0.3: The Gum Gum Pistol"></div>
+      <div class="quest-pip future" title="Build 0.4: The Marines"></div>
+      <div class="quest-pip future" title="Build 1.1: Full Arsenal"></div>
+      <div class="quest-pip future" title="Build 1.2: Zoro Joins"></div>
+      <div class="quest-pip future" title="Build 1.3: Ship Cannons"></div>
+      <div class="quest-pip future" title="Build 2.0: The Full Loop"></div>
+    </div>
+    <span class="quest-count">1 / 9</span>
+  </div>
+
+  <!-- RECAP -->
+  <div class="recap-card">
+    <div class="recap-icon">&#9875;</div>
+    <div class="recap-content">
+      <strong>Skills unlocked so far:</strong> You can direct AI to create stories, visuals, games, 3D models, and 3D-printed objects. You've done game design documents, iterative prompting, and full build-test-iterate cycles. Today you use those skills to create the first character of Pirate Gate.
+      <div class="recap-pips">
+        <span class="recap-pip">Prompt Craft &#10003;</span>
+        <span class="recap-pip">Creative Direction &#10003;</span>
+        <span class="recap-pip">3D Modeling &#10003;</span>
+        <span class="recap-pip">Game Design &#10003;</span>
+        <span class="recap-pip">Image Generation &#10003;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE RULE -->
+  <div class="rule-card">
+    <div class="rule-icon">&#9813;</div>
+    <div class="rule-text">
+      <h3>Your Luffy, Not the Anime's Luffy</h3>
+      <p>You designed an entire extraction game with four pirate factions, asymmetric abilities, and Devil Fruit risk-reward. Today you decide what <strong style="color:var(--pirate)">your Monkey D. Luffy</strong> looks like in that game. Not a copy from the anime &mdash; your captain, your vision, your Pirate Gate.</p>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-area">
+    <span class="progress-label">PHASES COMPLETE</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 4</span>
+  </div>
+
+  <!-- =============================== -->
+  <!-- PHASE 1: VISION -->
+  <!-- =============================== -->
+  <div class="section-label">Phase 01 &mdash; Vision</div>
+
+  <div class="mission-card" id="m1">
+    <div class="card-header" onclick="toggleCard('m1')">
+      <div class="card-number">01</div>
+      <div class="card-meta">
+        <div class="card-tag">Design</div>
+        <div class="card-title">See Your Captain</div>
+        <span class="card-badge badge-red">10 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Before you generate anything, <strong>describe Luffy to Claude Code.</strong> Not the anime Luffy &mdash; YOUR Luffy. The one who stands on the deck of the Going Merry in Pirate Gate. Claude will ask you questions to sharpen the vision.</p>
+
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">I'm designing Monkey D. Luffy for my game Pirate Gate. Let me describe what I see.</div>
+        <div class="say-note">Then describe him. Think about: which Luffy (pre-timeskip? post-timeskip? your own version?), the straw hat, the outfit, the stance, the expression, the scars.</div>
+      </div>
+
+      <p>Claude will ask follow-up questions &mdash; go deep. The more specific you are now, the better the concept art will be.</p>
+
+      <ul class="watch-list">
+        <li><span class="watch-icon">&#127857;</span> <strong>Which era?</strong> East Blue Luffy with the simple red vest? Post-timeskip with the chest scar and open shirt? Something you invent?</li>
+        <li><span class="watch-icon">&#127913;</span> <strong>The Straw Hat matters.</strong> It's the most iconic item in One Piece. How does he wear it in your game? On his head? Around his neck? Tilted?</li>
+        <li><span class="watch-icon">&#128170;</span> <strong>Luffy is rubber.</strong> Does his stance show it? Loose, flexible, unpredictable? Or is he standing like a traditional fighter with fists up?</li>
+      </ul>
+
+      <ol class="steps">
+        <li>Open Claude Code. Describe YOUR Luffy &mdash; outfit, stance, expression, details.</li>
+        <li>Answer Claude's follow-up questions. Go specific.</li>
+        <li>When Claude says it has a clear picture &mdash; move to Phase 2.</li>
+      </ol>
+
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Your imagination</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m1', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- PHASE 2: CONCEPT ART -->
+  <!-- =============================== -->
+  <div class="section-label">Phase 02 &mdash; Concept Art</div>
+
+  <div class="mission-card" id="m2">
+    <div class="card-header" onclick="toggleCard('m2')">
+      <div class="card-number">02</div>
+      <div class="card-meta">
+        <div class="card-tag">Create</div>
+        <div class="card-title">Bring Him to Sight</div>
+        <span class="card-badge badge-blue">15 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Now Claude generates concept art based on your description. You'll see Luffy for the first time &mdash; YOUR Luffy. Then you iterate. <strong>The first image is never the final image.</strong></p>
+
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">Generate concept art of Luffy based on what I described. Full body, anime cel-shaded style, clean background. I need to see the straw hat, the outfit, and the stance clearly.</div>
+      </div>
+
+      <p>When the image appears &mdash; look at it carefully. What's right? What needs to change?</p>
+
+      <div class="tip-box tip-red">
+        <div class="tip-icon">&#128257;</div>
+        <div class="tip-content"><strong>The iteration loop.</strong> Tell Claude what to keep and what to fix: "The straw hat is right but the vest should be more red. Keep the proportions." Usually takes 2&ndash;4 rounds to land on the one that makes you say "that's him."</div>
+      </div>
+
+      <div class="tip-box tip-gold">
+        <div class="tip-icon">&#127912;</div>
+        <div class="tip-content"><strong>For the 3D step:</strong> The final image needs to show Luffy clearly &mdash; full body, readable angle (front or 3/4 view), details visible. If the image is too stylized or abstract, Meshy will struggle to turn it into a 3D model. Clean shapes, clear silhouette, anime style with defined outlines.</div>
+      </div>
+
+      <ol class="steps">
+        <li>Tell Claude to generate the concept art.</li>
+        <li>Look at the result. Say what's right and what needs to change.</li>
+        <li>Iterate. Each round gets closer.</li>
+        <li>When you see YOUR Luffy &mdash; when the image matches what's in your head &mdash; lock it in.</li>
+      </ol>
+
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Gemini (image gen)</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m2', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- PHASE 3: 3D MODEL -->
+  <!-- =============================== -->
+  <div class="section-label">Phase 03 &mdash; The Forge</div>
+
+  <div class="mission-card" id="m3">
+    <div class="card-header" onclick="toggleCard('m3')">
+      <div class="card-number">03</div>
+      <div class="card-meta">
+        <div class="card-tag">Build</div>
+        <div class="card-title">Into the Third Dimension</div>
+        <span class="card-badge badge-gold">10 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>You don't need to leave Claude Code. Claude sends your concept art directly to Meshy and builds the 3D model for you. Same Meshy you know &mdash; but now Claude calls it, so everything stays in one conversation.</p>
+
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">Turn my Luffy concept art into a 3D model. Use Image to 3D.</div>
+        <div class="say-note">Claude will send the image to Meshy via MCP and show you the result when it's ready. Takes about a minute.</div>
+      </div>
+
+      <p>When the model comes back &mdash; review it. Does it capture the straw hat? The vest? The overall feel of YOUR Luffy? If not, tell Claude what's wrong and try again.</p>
+
+      <ol class="steps">
+        <li>Tell Claude to convert your concept art to 3D.</li>
+        <li>Wait about a minute. Claude will tell you when it's done.</li>
+        <li>Review the 3D model. Does it look like your Luffy?</li>
+        <li>If not &mdash; say what's wrong and generate again. Iteration is your workflow.</li>
+        <li>Lock in the best result.</li>
+      </ol>
+
+      <div class="tip-box tip-green">
+        <div class="tip-icon">&#128161;</div>
+        <div class="tip-content"><strong>Don't chase perfection.</strong> The 3D model won't be a pixel-perfect copy of the concept art. The goal is a recognizable Luffy with the right energy &mdash; the straw hat, the stance, the vibe. When we load him into the game engine with cel-shading, he'll look like an anime character.</div>
+      </div>
+
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Meshy MCP</span>
+        <span class="chip">Image to 3D</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m3', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- PHASE 4: RIG + ANIMATE -->
+  <!-- =============================== -->
+  <div class="section-label">Phase 04 &mdash; The Dojo</div>
+
+  <div class="mission-card" id="m4">
+    <div class="card-header" onclick="toggleCard('m4')">
+      <div class="card-number">04</div>
+      <div class="card-meta">
+        <div class="card-tag">Animate</div>
+        <div class="card-title">Teach Him to Fight</div>
+        <span class="card-badge badge-green">15 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Your Luffy model is static &mdash; a rubber statue. Now you give him bones and teach him to fight. Claude handles the rigging and animation through Meshy &mdash; you stay in the conversation and <strong>choose the moves.</strong></p>
+
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">Rig Luffy as a humanoid so he can move. Then let's pick his combat animations.</div>
+        <div class="say-note">Claude will auto-rig the model through Meshy MCP. Then you choose which fighting moves to give him.</div>
+      </div>
+
+      <p><strong>The design decisions are yours.</strong> Claude will present the animation options. You pick which ones become Luffy's moveset in Pirate Gate. Each animation you choose is a move in your captain's arsenal.</p>
+
+      <table class="anim-table">
+        <thead>
+          <tr><th>Preset</th><th>What It Does in Your Game</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Idle</td><td>Standing ready &mdash; Luffy's default stance</td></tr>
+          <tr><td>Combat_Stance</td><td>Fists up, ready to fight</td></tr>
+          <tr><td>One_Punch</td><td>Basic punch &mdash; the foundation of Gum Gum attacks</td></tr>
+          <tr><td>Uppercut</td><td>The base for Gum Gum Pistol &mdash; arm stretches on top of this</td></tr>
+          <tr><td>Double_Combo</td><td>Two-hit combo &mdash; quick one-two punches</td></tr>
+          <tr><td>Triple_Combo</td><td>Three-hit sequence &mdash; the big damage move</td></tr>
+          <tr><td>Block1</td><td>Blocking stance</td></tr>
+          <tr><td>Dodge</td><td>Quick dodge &mdash; rubber body sways out of the way</td></tr>
+          <tr><td>BeHit_FlyUp</td><td>Getting hit &mdash; reaction when an enemy lands a blow</td></tr>
+          <tr><td>Dying</td><td>Knocked out</td></tr>
+          <tr><td>Walking</td><td>Walking movement</td></tr>
+          <tr><td>RunFast</td><td>Running movement</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box tip-red">
+        <div class="tip-icon">&#128170;</div>
+        <div class="tip-content"><strong>This is the minimum, not the limit.</strong> If you find a combat move in the library that feels right for Luffy &mdash; add it. Look for rapid punches (Gum Gum Gatling base), charged punches (Gum Gum Bazooka base), or spinning attacks (Gum Gum Whip). You're the game designer.</div>
+      </div>
+
+      <p><strong>Export:</strong> Once you've chosen all the moves, tell Claude to download the final animated model as FBX. One file with Luffy's model, skeleton, and every animation you selected.</p>
+
+      <div class="tip-box tip-green">
+        <div class="tip-icon">&#127942;</div>
+        <div class="tip-content"><strong>Mission complete.</strong> That FBX file is the first artifact of Pirate Gate: One Piece. YOUR Luffy &mdash; designed from concept art you directed, brought into 3D, rigged, and animated with a full combat moveset. In the next session, we build his world.</div>
+      </div>
+
+      <ol class="steps">
+        <li>Tell Claude to rig Luffy. Claude handles it through Meshy &mdash; takes about 30 seconds.</li>
+        <li>Claude presents the animation options. Pick Luffy's combat moveset.</li>
+        <li>Select at minimum the animations in the table above.</li>
+        <li>Ask Claude about extras. Rapid punches? Charged attacks? Kicks?</li>
+        <li>Tell Claude to download the final animated model as FBX.</li>
+        <li>Done. That file is Monkey D. Luffy.</li>
+      </ol>
+
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Meshy MCP</span>
+        <span class="chip">Auto-Rig</span>
+        <span class="chip">Animation Presets</span>
+        <span class="chip">FBX Export</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m4', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- SKILLS EARNED -->
+  <!-- =============================== -->
+  <div style="margin-top: 48px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;">
+    <div class="eyebrow" style="margin-bottom: 12px;">// skills earned today</div>
+    <div class="xp-row" id="xpRow">
+      <span class="xp-pip" id="xp1">Character Design</span>
+      <span class="xp-pip" id="xp2">Concept Art Direction</span>
+      <span class="xp-pip" id="xp3">Image-to-3D Pipeline</span>
+      <span class="xp-pip" id="xp4">Combat Animation</span>
+    </div>
+    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);">
+      <div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;">// total skills (all sessions)</div>
+      <div class="xp-row">
+        <span class="xp-pip earned">Prompt Craft</span>
+        <span class="xp-pip earned">Storytelling</span>
+        <span class="xp-pip earned">Creative Direction</span>
+        <span class="xp-pip earned">Image Generation</span>
+        <span class="xp-pip earned">Game Design</span>
+        <span class="xp-pip earned">Iterative Dev</span>
+        <span class="xp-pip earned">3D Modeling</span>
+        <span class="xp-pip earned">Physical Prototyping</span>
+        <span class="xp-pip" id="xp1b">Character Design</span>
+        <span class="xp-pip" id="xp2b">Concept Art Direction</span>
+        <span class="xp-pip" id="xp3b">Image-to-3D Pipeline</span>
+        <span class="xp-pip" id="xp4b">Combat Animation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- WHAT'S NEXT -->
+  <!-- =============================== -->
+  <div style="margin-top: 24px; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--ocean); border-radius: 12px;">
+    <div style="font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px;">Next: Build 0.1 &mdash; The Grand Line</div>
+    <div style="font-size: 13px; color: var(--text-muted); line-height: 1.7; font-weight: 300;">
+      Your captain is forged. Now he needs a world. <strong style="color: var(--ocean);">Build 0.1</strong> creates the Grand Line &mdash; a cel-shaded anime ocean, the Going Merry, an island on the horizon. You'll pick up the controller and sail. The game gets its world.
+    </div>
+  </div>
+
+  <!-- BONUS -->
+  <div style="margin-top: 16px; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--straw); border-radius: 12px;">
+    <div style="font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px;">If You Have Time Left...</div>
+    <div style="font-size: 13px; color: var(--text-muted); line-height: 1.7; font-weight: 300;">
+      <strong style="color: var(--straw);">Bonus objectives:</strong> Design a Marine enemy (Luffy needs someone to punch). Or design Zoro &mdash; the first crew member. Or design a villain &mdash; Arlong, Buggy, or Don Krieg. Each one fights completely differently. That's the roster concept you designed &mdash; start seeing it take shape.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const STATE = { completed: new Set() };
+  const TOTAL = 4;
+
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.mission-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  function markDone(id, e) {
+    e.stopPropagation();
+    const card = document.getElementById(id);
+    const num = id.replace('m', '');
+
+    if (STATE.completed.has(id)) {
+      STATE.completed.delete(id);
+      card.classList.remove('done');
+      document.getElementById('xp' + num).classList.remove('earned');
+      document.getElementById('xp' + num + 'b').classList.remove('earned');
+    } else {
+      STATE.completed.add(id);
+      card.classList.add('done');
+      card.classList.remove('open');
+      document.getElementById('xp' + num).classList.add('earned');
+      document.getElementById('xp' + num + 'b').classList.add('earned');
+    }
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = STATE.completed.size;
+    document.getElementById('progressFill').style.width = (count / TOTAL * 100) + '%';
+    document.getElementById('progressCount').textContent = count + ' / ' + TOTAL;
+  }
+
+  // Open first card by default
+  document.getElementById('m1').classList.add('open');
+</script>
+</body>
+</html>
