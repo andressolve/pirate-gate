@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pirate Gate: One Piece — AI Game Studio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  :root {
+    --bg: #0a0a14;
+    --surface: #111122;
+    --surface2: #1a1a30;
+    --border: #282848;
+    --accent: #d63031;
+    --accent2: #0984e3;
+    --accent3: #00b894;
+    --text: #e8e8f2;
+    --text-muted: #7a7a9e;
+    --text-dim: #464868;
+    --pirate: #d63031;
+    --ocean: #0984e3;
+    --straw: #fdcb6e;
+    --rubber: #e17055;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(214,48,49,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(9,132,227,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(253,203,110,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ---- HEADER ---- */
+  header { margin-bottom: 48px; text-align: center; }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--pirate);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--pirate);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 9vw, 76px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    color: var(--text);
+  }
+
+  h1 span { color: var(--pirate); }
+  h1 .straw { color: var(--straw); }
+
+  h1 .studio-tag {
+    font-size: 0.32em;
+    font-weight: 600;
+    color: var(--ocean);
+    letter-spacing: 0;
+    display: block;
+    margin-top: 12px;
+  }
+
+  .subtitle {
+    margin: 24px auto 0;
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .subtitle strong { color: var(--text); font-weight: 500; }
+
+  /* ---- VISION CARD ---- */
+  .vision-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--straw);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+
+  .vision-card .vision-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--straw);
+    margin-bottom: 10px;
+  }
+
+  .vision-card blockquote {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+    font-style: italic;
+    padding-left: 0;
+    border: none;
+  }
+
+  .vision-card blockquote strong { color: var(--straw); font-weight: 500; font-style: normal; }
+
+  /* ---- SECTION LABEL ---- */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 40px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ---- STACK CARD ---- */
+  .stack-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .stack-item {
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .stack-item h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .stack-item p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .stack-item .stack-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .tag-red { color: var(--pirate); border: 1px solid var(--pirate); background: rgba(214,48,49,0.08); }
+  .tag-blue { color: var(--ocean); border: 1px solid var(--ocean); background: rgba(9,132,227,0.08); }
+  .tag-green { color: var(--accent3); border: 1px solid var(--accent3); background: rgba(0,184,148,0.08); }
+  .tag-gold { color: var(--straw); border: 1px solid var(--straw); background: rgba(253,203,110,0.08); }
+
+  /* ---- MISSION ROW ---- */
+  .mission-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 10px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .mission-row:hover {
+    border-color: var(--pirate);
+    transform: translateX(4px);
+  }
+
+  .mission-row.locked { opacity: 0.4; pointer-events: none; }
+
+  .mission-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    width: 56px;
+    min-width: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    color: var(--text-dim);
+    border-right: 1px solid var(--border);
+  }
+
+  .mission-row.ready .mission-num {
+    color: var(--pirate);
+    background: rgba(214,48,49,0.08);
+  }
+
+  .mission-info {
+    padding: 16px 20px;
+    flex: 1;
+  }
+
+  .mission-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .mission-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .mission-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+  }
+
+  .mission-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .link-briefing {
+    color: var(--ocean);
+    border: 1px solid rgba(9,132,227,0.3);
+    background: rgba(9,132,227,0.06);
+  }
+
+  .link-briefing:hover {
+    background: var(--ocean);
+    color: var(--bg);
+  }
+
+  .link-claude {
+    color: var(--accent3);
+    border: 1px solid rgba(0,184,148,0.3);
+    background: rgba(0,184,148,0.06);
+  }
+
+  .link-claude:hover {
+    background: var(--accent3);
+    color: var(--bg);
+  }
+
+  .mission-phase {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 6px;
+  }
+
+  /* ---- ROADMAP ---- */
+  .roadmap-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0.45;
+  }
+
+  .roadmap-build {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ocean);
+    min-width: 56px;
+  }
+
+  .roadmap-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .roadmap-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-left: auto;
+  }
+
+  /* ---- DOCS SECTION ---- */
+  .docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .doc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.15s;
+    display: block;
+  }
+
+  .doc-card:hover {
+    border-color: var(--ocean);
+    transform: translateY(-2px);
+  }
+
+  .doc-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .doc-card p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .doc-card .doc-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    margin-top: 60px;
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 2;
+  }
+
+  footer a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--pirate); }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 640px) {
+    .mission-actions {
+      flex-direction: column;
+      padding: 8px 12px 12px;
+      gap: 6px;
+    }
+    .mission-row { flex-wrap: wrap; }
+    .stack-card { flex-direction: column; }
+    .roadmap-desc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="eyebrow">AI Game Studio</div>
+    <h1>Pirate<br><span>Gate</span>
+      <span class="studio-tag">Francisco's Game Studio</span>
+    </h1>
+    <p class="subtitle">A 3D anime cel-shaded action game set in the <strong>One Piece</strong> universe. Built session by session with <strong>Claude Code</strong> &mdash; designed by Francisco, powered by AI.</p>
+  </header>
+
+  <!-- VISION -->
+  <div class="vision-card">
+    <div class="vision-label">The Designer's Vision</div>
+    <blockquote>
+      Four pirate factions race across the Grand Line to find the <strong>One Piece</strong>.
+      Pick a captain &mdash; get their ship, their crew, their <strong>Devil Fruit powers</strong>.
+      <strong>Luffy</strong> stretches. <strong>Arlong</strong> swims. <strong>Buggy</strong> splits apart.
+      Your ship is your life &mdash; if it sinks, your crew is eliminated.
+      Sail, fight, explore, extract. Every match tells a different story.
+    </blockquote>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section-label">Tech Stack</div>
+  <div class="stack-card">
+    <div class="stack-item">
+      <span class="stack-tag tag-red">Engine</span>
+      <h3>Three.js</h3>
+      <p>3D browser game. Cel-shaded anime rendering. Deploys as a shareable URL.</p>
+    </div>
+    <div class="stack-item">
+      <span class="stack-tag tag-blue">3D Models</span>
+      <h3>Meshy MCP</h3>
+      <p>Image-to-3D generation, auto-rigging, 500+ animation presets. All inside Claude Code.</p>
+    </div>
+    <div class="stack-item">
+      <span class="stack-tag tag-gold">Concept Art</span>
+      <h3>Gemini MCP</h3>
+      <p>AI image generation for character concepts and clean Meshy-ready reference images.</p>
+    </div>
+    <div class="stack-item">
+      <span class="stack-tag tag-green">IDE</span>
+      <h3>Claude Code</h3>
+      <p>The entire game is built through conversation. Francisco describes, Claude builds.</p>
+    </div>
+  </div>
+
+  <!-- CURRENT MISSION -->
+  <div class="section-label">Current Mission</div>
+
+  <div class="mission-row ready">
+    <div class="mission-num">1</div>
+    <div class="mission-info">
+      <div class="mission-title">Forge Your Captain</div>
+      <div class="mission-desc">Design Monkey D. Luffy &mdash; from concept art to rigged 3D model with combat animations</div>
+      <span class="mission-phase tag-red">The Character</span>
+    </div>
+    <div class="mission-actions">
+      <a href="missions/mission-1-forge-your-captain.html" class="mission-link link-briefing">Briefing</a>
+      <a href="missions/mission-1-forge-your-captain.md" class="mission-link link-claude">CLAUDE.md</a>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="section-label">Roadmap</div>
+
+  <div class="roadmap-row">
+    <span class="roadmap-build">0.1</span>
+    <span class="roadmap-title">The Grand Line</span>
+    <span class="roadmap-desc">Cel-shaded ocean, Going Merry, sail to an island</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">0.2</span>
+    <span class="roadmap-title">Luffy Walks</span>
+    <span class="roadmap-desc">Third-person character controller on the island</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">0.3</span>
+    <span class="roadmap-title">The Gum Gum Pistol</span>
+    <span class="roadmap-desc">Combat with arm-stretch and full juice stack</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">0.4</span>
+    <span class="roadmap-title">The Marines</span>
+    <span class="roadmap-desc">AI enemies, health bars, real fights</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">1.1</span>
+    <span class="roadmap-title">Full Arsenal</span>
+    <span class="roadmap-desc">Gum Gum Gatling + Bazooka + cooldowns</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">1.2</span>
+    <span class="roadmap-title">Zoro Joins</span>
+    <span class="roadmap-desc">Second character, roster begins</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">1.3</span>
+    <span class="roadmap-title">Ship Cannons</span>
+    <span class="roadmap-desc">Naval combat + Coup de Burst</span>
+  </div>
+  <div class="roadmap-row">
+    <span class="roadmap-build">2.0</span>
+    <span class="roadmap-title">The Full Loop</span>
+    <span class="roadmap-desc">Extraction objective, deploy to itch.io</span>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="section-label">Documents</div>
+  <div class="docs-grid">
+    <a href="vision_f.md" class="doc-card">
+      <div class="doc-tag">VISION</div>
+      <h4>Francisco's Design Document</h4>
+      <p>The full game vision &mdash; factions, combat, ships, Devil Fruits, the extraction loop</p>
+    </a>
+    <a href="technical-analysis_f.md" class="doc-card">
+      <div class="doc-tag">TECHNICAL ANALYSIS</div>
+      <h4>Technical Analysis</h4>
+      <p>Three.js + Meshy + Gemini &mdash; 8-session build sequence with wow-factor map</p>
+    </a>
+    <a href="pirate-gate-studio-plan.md" class="doc-card">
+      <div class="doc-tag">STUDIO PLAN</div>
+      <h4>Studio Build Plan</h4>
+      <p>Session design, pre-engineering approach, instance rules, framing strategy</p>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Pirate Gate: One Piece &mdash; AI Game Studio</p>
+    <p>Built with <a href="https://claude.ai/claude-code" target="_blank">Claude Code</a> + Three.js + Meshy + Gemini</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
