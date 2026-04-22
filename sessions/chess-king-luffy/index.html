@@ -3,133 +3,525 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luffy King Chess Piece — Setup Guide</title>
+<title>Pirate Gate — The King: Monkey D. Luffy</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
 
   :root {
-    --bg: #111;
-    --surface: #1a1a1a;
-    --border: #2a2a2a;
-    --text: #eee;
-    --muted: #888;
-    --dim: #555;
-    --red: #e74c3c;
-    --blue: #3498db;
-    --green: #2ecc71;
-    --gold: #f1c40f;
+    --bg: #0a0a14;
+    --surface: #111122;
+    --surface2: #1a1a30;
+    --border: #282848;
+    --accent3: #00b894;
+    --text: #e8e8f2;
+    --text-muted: #7a7a9e;
+    --text-dim: #464868;
+    --pirate: #d63031;
+    --ocean: #0984e3;
+    --straw: #fdcb6e;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.6;
-    padding: 40px 20px 100px;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  .container {
-    max-width: 680px;
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(214,48,49,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 85% 85%, rgba(253,203,110,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 50% 40%, rgba(200,184,154,0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
     margin: 0 auto;
+    padding: 48px 24px 80px;
   }
 
-  h1 {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
+  /* ---- HEADER ---- */
+  header { margin-bottom: 48px; }
 
-  h1 span { color: var(--red); }
-
-  .tagline {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 40px;
-  }
-
-  h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 40px 0 16px;
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--pirate);
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
   }
 
-  h2 .step-num {
-    background: var(--red);
-    color: white;
-    width: 28px;
-    height: 28px;
+  .eyebrow::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--pirate);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 8vw, 68px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    color: var(--text);
+  }
+
+  h1 .king { color: var(--straw); }
+  h1 .sub {
+    font-size: 0.38em;
+    font-weight: 600;
+    color: var(--pirate);
+    letter-spacing: 0;
+    display: block;
+    margin-top: 8px;
+  }
+
+  .subtitle {
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 620px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .subtitle strong { color: var(--text); font-weight: 500; }
+
+  /* ---- CHESS ROSTER BAR ---- */
+  .roster-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .roster-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .roster-pieces {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    align-items: center;
+  }
+
+  .roster-piece {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    opacity: 0.15;
+    transition: opacity 0.3s;
+  }
+
+  .roster-piece.active {
+    opacity: 1;
+  }
+
+  .roster-piece .piece-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .roster-piece.active .piece-icon {
+    filter: drop-shadow(0 0 6px rgba(253,203,110,0.4));
+  }
+
+  .roster-piece .piece-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .roster-piece.active .piece-name {
+    color: var(--straw);
+  }
+
+  .roster-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--straw);
+    white-space: nowrap;
+  }
+
+  /* ---- INSIGHT CARD ---- */
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .insight-icon { font-size: 28px; line-height: 1; margin-top: 2px; }
+
+  .insight-text h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .insight-text p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ---- PROGRESS ---- */
+  .progress-area {
+    margin-bottom: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .progress-track {
+    flex: 1; height: 5px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pirate), var(--straw));
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--straw);
+    white-space: nowrap;
+    min-width: 50px;
+    text-align: right;
+  }
+
+  /* ---- SECTION LABEL ---- */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 36px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ---- MISSION CARDS ---- */
+  .mission-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 0;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .mission-card.done { opacity: 0.55; }
+  .mission-card.done .card-number { background: var(--accent3); color: var(--bg); }
+  .mission-card.done .card-number span { display: none; }
+  .mission-card.done .card-number::after { content: '\2713'; }
+
+  .card-header {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .card-header:hover { background: var(--surface2); }
+
+  .card-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    width: 64px;
+    min-width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+  }
+
+  .card-meta { padding: 18px 20px; flex: 1; }
+
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .card-badge {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 99px;
+    border: 1px solid;
+  }
+
+  .badge-red { color: var(--pirate); border-color: var(--pirate); background: rgba(214,48,49,0.08); }
+  .badge-blue { color: var(--ocean); border-color: var(--ocean); background: rgba(9,132,227,0.08); }
+  .badge-green { color: var(--accent3); border-color: var(--accent3); background: rgba(0,184,148,0.08); }
+  .badge-gold { color: var(--straw); border-color: var(--straw); background: rgba(253,203,110,0.08); }
+
+  .card-chevron {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    color: var(--text-dim);
+    font-size: 20px;
+    transition: transform 0.3s, color 0.2s;
+  }
+
+  .mission-card.open .card-chevron { transform: rotate(90deg); color: var(--straw); }
+
+  .card-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 24px 24px 20px;
+    animation: slideDown 0.25s ease;
+  }
+
+  .mission-card.open .card-body { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-body p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+
+  .card-body strong { color: var(--text); font-weight: 500; }
+
+  /* ---- SAY BOX ---- */
+  .say-box {
+    background: var(--bg);
+    border: 1px solid rgba(9,132,227,0.3);
+    border-left: 3px solid var(--ocean);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+
+  .say-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ocean);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .say-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .say-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* ---- CODE BOX ---- */
+  .code-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent3);
+    line-height: 1.65;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .code-box .comment { color: var(--text-dim); }
+  .code-box .highlight { color: var(--straw); }
+
+  /* ---- STEPS ---- */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    margin: 16px 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    flex-shrink: 0;
+    color: var(--straw);
+    margin-top: 1px;
   }
 
-  p {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 12px;
-  }
-
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    margin: 16px 0;
-  }
-
-  .card p:last-child { margin-bottom: 0; }
-
-  code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    background: #222;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: var(--gold);
-  }
-
-  .code-block {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    background: #0d0d0d;
-    border: 1px solid var(--border);
+  /* ---- TIPS ---- */
+  .tip-box {
+    background: rgba(9,132,227,0.08);
+    border: 1px solid rgba(9,132,227,0.3);
     border-radius: 8px;
-    padding: 16px;
-    margin: 12px 0;
-    color: var(--green);
-    overflow-x: auto;
-    white-space: pre;
-    line-height: 1.5;
+    padding: 14px 16px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
   }
 
+  .tip-box.tip-green { background: rgba(0,184,148,0.06); border-color: rgba(0,184,148,0.25); }
+  .tip-box.tip-red { background: rgba(214,48,49,0.06); border-color: rgba(214,48,49,0.25); }
+  .tip-box.tip-gold { background: rgba(253,203,110,0.06); border-color: rgba(253,203,110,0.25); }
+
+  .tip-icon { font-size: 16px; line-height: 1; margin-top: 1px; }
+
+  .tip-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .tip-content strong { color: var(--ocean); font-weight: 500; }
+  .tip-green .tip-content strong { color: var(--accent3); }
+  .tip-red .tip-content strong { color: var(--pirate); }
+  .tip-gold .tip-content strong { color: var(--straw); }
+
+  /* ---- DOWNLOAD BUTTON ---- */
   .download-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 14px 24px;
-    background: var(--red);
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--pirate), #b52626);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.15s;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 20px rgba(214,48,49,0.25);
     margin: 8px 0;
   }
 
-  .download-btn:hover { background: #c0392b; }
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(214,48,49,0.35);
+  }
+
+  .download-btn:active { transform: translateY(0); }
 
   .download-btn svg {
     width: 18px;
@@ -137,235 +529,594 @@
     fill: currentColor;
   }
 
-  .note {
-    background: rgba(52,152,219,0.1);
-    border-left: 3px solid var(--blue);
-    padding: 14px 16px;
-    border-radius: 0 8px 8px 0;
-    margin: 16px 0;
-  }
-
-  .note p { color: #a8c8e8; margin-bottom: 0; }
-  .note strong { color: var(--blue); }
-
-  .warn {
-    background: rgba(231,76,60,0.1);
-    border-left: 3px solid var(--red);
-    padding: 14px 16px;
-    border-radius: 0 8px 8px 0;
-    margin: 16px 0;
-  }
-
-  .warn p { color: #e8a8a8; margin-bottom: 0; }
-  .warn strong { color: var(--red); }
-
-  .success {
-    background: rgba(46,204,113,0.1);
-    border-left: 3px solid var(--green);
-    padding: 14px 16px;
-    border-radius: 0 8px 8px 0;
-    margin: 16px 0;
-  }
-
-  .success p { color: #a8e8c8; margin-bottom: 0; }
-  .success strong { color: var(--green); }
-
-  .checklist {
-    list-style: none;
-    margin: 16px 0;
-  }
-
-  .checklist li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 0;
-    font-size: 14px;
-    color: var(--muted);
-  }
-
-  .checklist li input[type="checkbox"] {
-    margin-top: 3px;
-    accent-color: var(--green);
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-  }
-
-  .phase-list {
-    list-style: none;
-    margin: 16px 0;
-    counter-reset: phase;
-  }
-
-  .phase-list li {
-    counter-increment: phase;
-    padding: 12px 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+  /* ---- COMPLETE BUTTON ---- */
+  .complete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--accent3);
     border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 14px;
+    color: var(--accent3);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .complete-btn:hover { background: var(--accent3); color: var(--bg); }
+  .mission-card.done .complete-btn { border-color: var(--text-dim); color: var(--text-dim); }
+
+  /* ---- TOOL CHIPS ---- */
+  .tool-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+
+  .chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 99px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  /* ---- ROSTER TABLE ---- */
+  .roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .roster-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .roster-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(40,40,66,0.5);
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .roster-table td:first-child {
+    font-size: 18px;
+    text-align: center;
+    width: 40px;
+  }
+
+  .roster-table td:nth-child(2) {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--pirate);
+  }
+
+  .roster-table tr.active td { color: var(--straw); font-weight: 500; }
+  .roster-table tr.active td:nth-child(2) { color: var(--straw); }
+
+  /* ---- WATCH LIST ---- */
+  .watch-list { list-style: none; margin: 14px 0; }
+
+  .watch-list li {
     display: flex;
     gap: 12px;
-    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
   }
 
-  .phase-list li::before {
-    content: counter(phase);
-    background: var(--border);
-    color: var(--muted);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .watch-list li .watch-icon {
+    font-size: 14px;
+    margin-top: 3px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* ---- XP ---- */
+  .xp-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .xp-pip {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: all 0.3s;
+  }
+
+  .xp-pip.earned {
+    background: rgba(0,184,148,0.1);
+    border-color: rgba(0,184,148,0.3);
+    color: var(--accent3);
+  }
+
+  /* ---- FOLDER TREE ---- */
+  .folder-tree {
+    font-family: 'DM Mono', monospace;
     font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
-    margin-top: 1px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    padding: 4px 0;
   }
 
-  .phase-list li strong { color: var(--text); }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 40px 0;
-  }
-
-  .goal {
-    font-size: 16px;
-    color: var(--text);
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
+  .folder-tree .folder { color: var(--ocean); }
+  .folder-tree .file { color: var(--accent3); }
+  .folder-tree .arrow { color: var(--straw); }
 </style>
 </head>
+
 <body>
-<div class="container">
+<div class="wrapper">
 
-  <h1>The <span>King</span>: Luffy Chess Piece</h1>
-  <p class="tagline">Design and 3D print a King chess piece featuring Monkey D. Luffy. Everything happens in Claude Code.</p>
+  <header>
+    <div class="eyebrow">// pirate gate chess collection</div>
+    <h1>The <span class="king">King</span><span class="sub">3D Print &mdash; Monkey D. Luffy</span></h1>
+    <p class="subtitle">The King of the Pirates doesn't wear a crown &mdash; he wears a <strong>straw hat</strong>. Design a King chess piece featuring Luffy, turn it into a 3D model, and print it. Everything happens in one Claude Code conversation.</p>
+  </header>
 
-  <p class="goal">By the end of this session, you'll have a print-ready STL file of a Luffy King chess piece that you designed.</p>
-
-  <hr class="divider">
-
-  <!-- STEP 1 -->
-  <h2><span class="step-num">1</span> Download the session file</h2>
-
-  <p>This file tells Claude Code everything it needs to know to run the session with you &mdash; how to generate concept art, convert it to 3D, and prepare it for printing.</p>
-
-  <a class="download-btn" id="downloadBtn" href="#">
-    <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-    Download CLAUDE.md
-  </a>
-
-  <div class="note">
-    <p><strong>What is this file?</strong> It's instructions for Claude Code. When Claude Code opens in a folder that has a CLAUDE.md file, it reads it automatically and knows what to do. You don't need to read it yourself &mdash; just put it in the right place.</p>
+  <!-- CHESS ROSTER BAR -->
+  <div class="roster-bar">
+    <span class="roster-label">Chess Set</span>
+    <div class="roster-pieces">
+      <div class="roster-piece active">
+        <span class="piece-icon">&#9812;</span>
+        <span class="piece-name">Luffy</span>
+      </div>
+      <div class="roster-piece">
+        <span class="piece-icon">&#9813;</span>
+        <span class="piece-name">Nami</span>
+      </div>
+      <div class="roster-piece">
+        <span class="piece-icon">&#9815;</span>
+        <span class="piece-name">Zoro</span>
+      </div>
+      <div class="roster-piece">
+        <span class="piece-icon">&#9816;</span>
+        <span class="piece-name">Chopper</span>
+      </div>
+      <div class="roster-piece">
+        <span class="piece-icon">&#9814;</span>
+        <span class="piece-name">Merry</span>
+      </div>
+      <div class="roster-piece">
+        <span class="piece-icon">&#9817;</span>
+        <span class="piece-name">Marine</span>
+      </div>
+    </div>
+    <span class="roster-count">1 / 6</span>
   </div>
 
-  <!-- STEP 2 -->
-  <h2><span class="step-num">2</span> Put it in the right folder</h2>
-
-  <p>Create a new folder for this session, then put the CLAUDE.md file inside it:</p>
-
-  <div class="code-block">Documents/
-  francisco-game-studio/
-    sessions/
-      chess-king-luffy/       <span style="color: var(--gold);">&larr; put CLAUDE.md here</span>
-        CLAUDE.md</div>
-
-  <p>If the folder already exists, just drop the file in. If not, create it.</p>
-
-  <div class="warn">
-    <p><strong>The file must be named exactly <code>CLAUDE.md</code></strong> (capital letters, no spaces). Claude Code only reads it if the name is exact.</p>
+  <!-- KEY INSIGHT -->
+  <div class="insight-card">
+    <div class="insight-icon">&#9812;</div>
+    <div class="insight-text">
+      <h3>The Straw Hat Is the Crown</h3>
+      <p>A King chess piece has a cross on top. Your King has a <strong style="color:var(--straw)">straw hat</strong>. The silhouette reads as a King, but anyone who knows One Piece knows it's Luffy. Your job is to make a chess piece that works on both levels.</p>
+    </div>
   </div>
 
-  <!-- STEP 3 -->
-  <h2><span class="step-num">3</span> Open Claude Code in that folder</h2>
+  <!-- PROGRESS -->
+  <div class="progress-area">
+    <span class="progress-label">PHASES COMPLETE</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-count" id="progressCount">0 / 6</span>
+  </div>
 
-  <p>Open your terminal and run:</p>
+  <!-- =============================== -->
+  <!-- SETUP: DOWNLOAD -->
+  <!-- =============================== -->
+  <div class="section-label">Setup &mdash; Before You Start</div>
 
-  <div class="code-block">cd ~/Documents/francisco-game-studio/sessions/chess-king-luffy
+  <div class="mission-card" id="m1">
+    <div class="card-header" onclick="toggleCard('m1')">
+      <div class="card-number"><span>01</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Setup</div>
+        <div class="card-title">Download the Session File</div>
+        <span class="card-badge badge-red">2 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>This file tells Claude Code everything it needs to know to run the session &mdash; how to generate your concept art, convert it to 3D, and prepare it for printing. You don't need to read it. Just download it and put it in the right place.</p>
+
+      <a class="download-btn" id="downloadBtn" href="#">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Download CLAUDE.md
+      </a>
+
+      <div class="tip-box">
+        <div class="tip-icon">&#128196;</div>
+        <div class="tip-content"><strong>What is this file?</strong> When Claude Code opens in a folder that has a file called CLAUDE.md, it reads the instructions automatically. It's how you give Claude Code a mission before you even say anything. Claude reads it, knows the plan, and is ready to go.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m1', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- SETUP: PLACE FILE -->
+  <div class="mission-card" id="m2">
+    <div class="card-header" onclick="toggleCard('m2')">
+      <div class="card-number"><span>02</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Setup</div>
+        <div class="card-title">Put It in the Right Folder</div>
+        <span class="card-badge badge-red">2 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Create a folder for this session and drop the <strong>CLAUDE.md</strong> file inside it. Here's the path:</p>
+
+      <div class="code-box"><span class="folder">Documents/</span>
+  <span class="folder">francisco-game-studio/</span>
+    <span class="folder">sessions/</span>
+      <span class="folder">chess-king-luffy/</span>
+        <span class="file">CLAUDE.md</span>  <span class="arrow">&larr; put it here</span></div>
+
+      <p>If the folder already exists on your computer, just drop the file in. If not, create the folders.</p>
+
+      <div class="tip-box tip-red">
+        <div class="tip-icon">&#9888;&#65039;</div>
+        <div class="tip-content"><strong>The filename matters.</strong> It must be exactly <code style="font-family:'DM Mono',monospace; background:var(--bg); padding:2px 6px; border-radius:3px; color:var(--straw);">CLAUDE.md</code> &mdash; capital letters, no spaces. Claude Code only reads it if the name is exact.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m2', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- SETUP: OPEN CLAUDE CODE -->
+  <div class="mission-card" id="m3">
+    <div class="card-header" onclick="toggleCard('m3')">
+      <div class="card-number"><span>03</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Setup</div>
+        <div class="card-title">Open Claude Code</div>
+        <span class="card-badge badge-red">1 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Open your terminal and run these two commands:</p>
+
+      <div class="code-box"><span class="comment"># navigate to the session folder</span>
+cd ~/Documents/francisco-game-studio/sessions/chess-king-luffy
+
+<span class="comment"># launch Claude Code</span>
 claude</div>
 
-  <p>Claude Code will start up and automatically read the CLAUDE.md. It knows the mission.</p>
+      <p>Claude Code starts up and <strong>automatically reads the CLAUDE.md.</strong> It already knows the mission. It will check that the image generation and 3D tools are working, then greet you.</p>
 
-  <div class="note">
-    <p><strong>First time?</strong> Claude Code might need to set up the Meshy and Gemini connections. If it says something about "MCP not found" or asks your parent for an API key, that's normal &mdash; it just needs a quick setup. The instructions are in the CLAUDE.md.</p>
+      <div class="tip-box tip-gold">
+        <div class="tip-icon">&#128161;</div>
+        <div class="tip-content"><strong>If something about MCP or tools is missing:</strong> That's OK. Claude Code might need your parent to help set up a connection the first time. The instructions are in the CLAUDE.md &mdash; Claude Code knows what to do. Just follow what it says or grab your parent.</div>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m3', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
   </div>
 
-  <!-- STEP 4 -->
-  <h2><span class="step-num">4</span> Start talking</h2>
+  <!-- =============================== -->
+  <!-- THE SESSION -->
+  <!-- =============================== -->
+  <div class="section-label">The Session &mdash; ~45 minutes</div>
 
-  <p>Claude Code will greet you and set the mission. Then it's a conversation. Here's what you'll do:</p>
+  <!-- PHASE 1: DESIGN -->
+  <div class="mission-card" id="m4">
+    <div class="card-header" onclick="toggleCard('m4')">
+      <div class="card-number"><span>04</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Design</div>
+        <div class="card-title">Describe the King</div>
+        <span class="card-badge badge-gold">10 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Before anything gets generated, <strong>describe your Luffy King chess piece to Claude Code.</strong> A chess piece that IS Luffy &mdash; not Luffy holding a chess piece. Claude will ask you questions to sharpen the vision.</p>
 
-  <ol class="phase-list">
-    <li><strong>Describe your Luffy King.</strong> Tell Claude what you see &mdash; the pose, the outfit, the straw hat, the base. Claude asks questions to sharpen the picture. (~10 min)</li>
-    <li><strong>Generate concept art.</strong> Claude creates images based on your description. You say what's right and what to change. Iterate until it looks like YOUR Luffy. (~15 min)</li>
-    <li><strong>Convert to 3D.</strong> Claude sends your concept art to Meshy and builds a 3D model. You'll see it in a browser viewer you can rotate and check from every angle. (~10 min)</li>
-    <li><strong>Prep for printing.</strong> Claude resizes the model, exports it as STL, and repairs the mesh. You get a file ready to open in QIDIStudio and print. (~10 min)</li>
-  </ol>
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">I want to design a King chess piece featuring Monkey D. Luffy. Let me describe what I see.</div>
+        <div class="say-note">Then describe your vision. Claude will ask follow-up questions to get the details right.</div>
+      </div>
 
-  <div class="success">
-    <p><strong>Total time: ~45 minutes.</strong> At the end you'll have a print-ready STL of a King chess piece that you designed. If you have time left, you can design another piece (Queen? Pawn? The enemy King?).</p>
+      <ul class="watch-list">
+        <li><span class="watch-icon">&#9812;</span> <strong>Chess piece shape.</strong> Classic round chess base or something custom? How does the silhouette read as a King piece?</li>
+        <li><span class="watch-icon">&#127913;</span> <strong>The straw hat = the crown.</strong> On his head? Tilted? Around his neck? This is what makes the King a King.</li>
+        <li><span class="watch-icon">&#128170;</span> <strong>Luffy's pose.</strong> Standing tall? Arms crossed? Fist up? Arms close to body print better &mdash; stretched-out Gum Gum poses can snap off.</li>
+        <li><span class="watch-icon">&#127912;</span> <strong>Which Luffy?</strong> Pre-timeskip (red vest, blue shorts)? Post-timeskip (open shirt, chest scar)? Gear Fifth? Your own version?</li>
+        <li><span class="watch-icon">&#128207;</span> <strong>The base.</strong> Smooth cylinder? Ocean waves? Skull and crossbones? The Going Merry's deck?</li>
+      </ul>
+
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Your imagination</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m4', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
   </div>
 
-  <hr class="divider">
+  <!-- PHASE 2: CONCEPT ART -->
+  <div class="mission-card" id="m5">
+    <div class="card-header" onclick="toggleCard('m5')">
+      <div class="card-number"><span>05</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Create</div>
+        <div class="card-title">See the King</div>
+        <span class="card-badge badge-blue">15 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Claude generates concept art based on your description. You'll see your Luffy King for the first time. Then you iterate &mdash; <strong>the first image is never the final image.</strong></p>
 
-  <h2>Things to think about before you start</h2>
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">Generate concept art of my Luffy King chess piece. I want to see the full piece &mdash; hat, pose, base, everything.</div>
+      </div>
 
-  <p>You don't need to decide everything now &mdash; Claude will ask you during the session. But it helps to have some ideas:</p>
+      <p>When the image appears, look carefully. What's right? What needs to change? Tell Claude: <strong>"The hat is right but the base needs to be taller"</strong> or <strong>"Make him look more confident."</strong> Usually takes 2&ndash;4 rounds.</p>
 
-  <ul class="checklist">
-    <li><input type="checkbox"> <span><strong>Which Luffy?</strong> Pre-timeskip (red vest, blue shorts)? Post-timeskip (open shirt, chest scar)? Gear Fifth? Your own version?</span></li>
-    <li><input type="checkbox"> <span><strong>The straw hat.</strong> On his head? Tilted? Around his neck? This is the crown of the King piece.</span></li>
-    <li><input type="checkbox"> <span><strong>Pose.</strong> Standing tall like a captain? Arms crossed? Fist up? Remember: arms close to body print better.</span></li>
-    <li><input type="checkbox"> <span><strong>The base.</strong> Classic round chess pedestal? Ocean waves? Skull and crossbones? Something else?</span></li>
-    <li><input type="checkbox"> <span><strong>How tall?</strong> Standard King is ~9 cm. Bigger for a display piece? Smaller for a travel set?</span></li>
-  </ul>
+      <div class="tip-box tip-gold">
+        <div class="tip-icon">&#127912;</div>
+        <div class="tip-content"><strong>Two versions.</strong> Claude generates a dramatic version (for you to see) and a clean version (optimized for the 3D conversion software). Same design, different format. The clean one is what becomes the 3D model.</div>
+      </div>
 
-  <hr class="divider">
+      <ol class="steps">
+        <li>Tell Claude to generate concept art.</li>
+        <li>Review. Say what's right and what to change.</li>
+        <li>Iterate until you see YOUR Luffy King.</li>
+        <li>Claude generates the clean version for 3D. Lock it in.</li>
+      </ol>
 
-  <h2>The bigger picture</h2>
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Gemini (image gen)</span>
+      </div>
 
-  <div class="card">
-    <p style="color: var(--text); font-weight: 500; margin-bottom: 8px;">This is the first piece of a One Piece chess set.</p>
-    <p>King = Luffy. Queen = Nami. Bishop = Zoro. Knight = Chopper. Rook = Going Merry. Pawn = Marines. Each one gets the same treatment: describe it, generate art, convert to 3D, print it. Today you start with the most important piece.</p>
+      <button class="complete-btn" onclick="markDone('m5', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 3: 3D -->
+  <div class="mission-card" id="m6">
+    <div class="card-header" onclick="toggleCard('m6')">
+      <div class="card-number"><span>06</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Build</div>
+        <div class="card-title">Into the Third Dimension</div>
+        <span class="card-badge badge-gold">10 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>Claude sends your concept art to Meshy and builds the 3D model. Same Meshy you've used before &mdash; but called directly from the conversation. No switching apps.</p>
+
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">Turn my concept art into a 3D model. Use image-to-3D.</div>
+        <div class="say-note">Takes about a minute. Claude opens a 3D viewer in your browser so you can rotate the model and check every angle.</div>
+      </div>
+
+      <p>Rotate the model. Check the straw hat, the pose, the base. Does it capture the energy of your design? If not, tell Claude what's off and try again.</p>
+
+      <div class="tip-box tip-green">
+        <div class="tip-icon">&#128161;</div>
+        <div class="tip-content"><strong>Image-to-3D, always.</strong> Starting from your concept art produces way better results than describing the model in text. That's why we drew it first.</div>
+      </div>
+
+      <div class="tool-chips">
+        <span class="chip">Claude Code</span>
+        <span class="chip">Meshy MCP</span>
+        <span class="chip">Image to 3D</span>
+        <span class="chip">3D Viewer</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m6', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 4: PRINT PREP -->
+  <div class="mission-card" id="m7">
+    <div class="card-header" onclick="toggleCard('m7')">
+      <div class="card-number"><span>07</span></div>
+      <div class="card-meta">
+        <div class="card-tag">Forge</div>
+        <div class="card-title">Ready for the Printer</div>
+        <span class="card-badge badge-green">10 min</span>
+      </div>
+      <div class="card-chevron">&#8250;</div>
+    </div>
+    <div class="card-body">
+      <p>The 3D model is right. Now Claude prepares it for the real world &mdash; <strong>right size, right format, solid geometry.</strong></p>
+
+      <div class="say-box">
+        <div class="say-label">&#128172; Say this to Claude Code</div>
+        <div class="say-text">Prepare my Luffy King for 3D printing. Make it about 9 cm tall. Export as STL and repair the mesh.</div>
+        <div class="say-note">Claude handles the full pipeline &mdash; resize, export, repair, quality check. All automatic.</div>
+      </div>
+
+      <ol class="steps">
+        <li><strong>Remesh</strong> &mdash; optimizes the model and sets the height. Standard King is ~9 cm. Want bigger? Tell Claude.</li>
+        <li><strong>Export to STL</strong> &mdash; the format your 3D printer reads.</li>
+        <li><strong>Mesh repair</strong> &mdash; fixes surfaces, fills holes, removes floating fragments.</li>
+        <li><strong>Quality check</strong> &mdash; makes sure the model is solid, not hollow. If hollow, Claude regenerates.</li>
+        <li><strong>Final preview</strong> &mdash; what you see is exactly what will come out of the printer.</li>
+      </ol>
+
+      <div class="tip-box tip-green">
+        <div class="tip-icon">&#127942;</div>
+        <div class="tip-content"><strong>Mission complete.</strong> Open the STL in QIDIStudio, slice it, and print. That's YOUR Luffy King &mdash; designed by you, built from your concept art, repaired and sized for the printer. The first piece of the One Piece chess set.</div>
+      </div>
+
+      <div class="tool-chips">
+        <span class="chip">Meshy Remesh</span>
+        <span class="chip">STL Export</span>
+        <span class="chip">admesh Repair</span>
+        <span class="chip">QIDIStudio</span>
+      </div>
+
+      <button class="complete-btn" onclick="markDone('m7', event)">
+        <span>&#10003;</span> Mark Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- SKILLS -->
+  <!-- =============================== -->
+  <div style="margin-top: 48px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;">
+    <div class="eyebrow" style="margin-bottom: 12px;">// skills earned today</div>
+    <div class="xp-row" id="xpRow">
+      <span class="xp-pip" id="xp4">Chess Piece Design</span>
+      <span class="xp-pip" id="xp5">Concept Art Direction</span>
+      <span class="xp-pip" id="xp6">Image-to-3D Pipeline</span>
+      <span class="xp-pip" id="xp7">3D Print Prep</span>
+    </div>
+    <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);">
+      <div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;">// total skills (all sessions)</div>
+      <div class="xp-row">
+        <span class="xp-pip earned">Prompt Craft</span>
+        <span class="xp-pip earned">Storytelling</span>
+        <span class="xp-pip earned">Creative Direction</span>
+        <span class="xp-pip earned">Image Generation</span>
+        <span class="xp-pip earned">Game Design</span>
+        <span class="xp-pip earned">Iterative Dev</span>
+        <span class="xp-pip earned">3D Modeling</span>
+        <span class="xp-pip earned">Physical Prototyping</span>
+        <span class="xp-pip" id="xp4b">Chess Piece Design</span>
+        <span class="xp-pip" id="xp5b">Concept Art Direction</span>
+        <span class="xp-pip" id="xp6b">Image-to-3D Pipeline</span>
+        <span class="xp-pip" id="xp7b">3D Print Prep</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- THE FULL SET -->
+  <!-- =============================== -->
+  <div style="margin-top: 24px; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--straw); border-radius: 12px;">
+    <div style="font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 12px;">The One Piece Chess Set</div>
+    <div style="font-size: 13px; color: var(--text-muted); line-height: 1.7; font-weight: 300; margin-bottom: 14px;">
+      A King needs a board. Here's what the full Straw Hat side could look like:
+    </div>
+    <table class="roster-table">
+      <thead>
+        <tr><th></th><th>Piece</th><th>Character</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr class="active"><td>&#9812;</td><td>King</td><td>Luffy</td><td>The captain. The straw hat is the crown.</td></tr>
+        <tr><td>&#9813;</td><td>Queen</td><td>Nami</td><td>Most versatile. Clima-Tact controls the board.</td></tr>
+        <tr><td>&#9815;</td><td>Bishop</td><td>Zoro</td><td>Three swords, diagonal slashes.</td></tr>
+        <tr><td>&#9816;</td><td>Knight</td><td>Chopper</td><td>Antlers like a horse. Transforms into something huge.</td></tr>
+        <tr><td>&#9814;</td><td>Rook</td><td>Going Merry</td><td>The ship. A castle on the water.</td></tr>
+        <tr><td>&#9817;</td><td>Pawn</td><td>Marine</td><td>Expendable. Eight of them. They just keep coming.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BONUS -->
+  <div style="margin-top: 16px; padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--ocean); border-radius: 12px;">
+    <div style="font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px;">If You Have Time Left...</div>
+    <div style="font-size: 13px; color: var(--text-muted); line-height: 1.7; font-weight: 300;">
+      <strong style="color: var(--ocean);">Design another piece.</strong> Same pipeline &mdash; describe, generate art, convert to 3D, prep for printing. Or go wild: design the enemy King. Buggy? Arlong? That's a whole second army.
+    </div>
   </div>
 
 </div>
 
 <script>
-// Generate CLAUDE.md content for download
-const claudeMd = `PLACEHOLDER`;
+  const STATE = { completed: new Set() };
+  const TOTAL = 7;
+  const XP_MAP = { m4: ['xp4','xp4b'], m5: ['xp5','xp5b'], m6: ['xp6','xp6b'], m7: ['xp7','xp7b'] };
 
-document.getElementById('downloadBtn').addEventListener('click', function(e) {
-  e.preventDefault();
-  // Fetch the CLAUDE.md from the same directory
-  fetch('CLAUDE.md')
-    .then(r => {
-      if (!r.ok) throw new Error('Could not load CLAUDE.md');
-      return r.text();
-    })
-    .then(text => {
-      const blob = new Blob([text], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'CLAUDE.md';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    })
-    .catch(() => {
-      alert('Could not load CLAUDE.md. Make sure the file is in the same folder as this page.');
-    });
-});
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    const isOpen = card.classList.contains('open');
+    document.querySelectorAll('.mission-card').forEach(c => c.classList.remove('open'));
+    if (!isOpen) card.classList.add('open');
+  }
+
+  function markDone(id, e) {
+    e.stopPropagation();
+    const card = document.getElementById(id);
+
+    if (STATE.completed.has(id)) {
+      STATE.completed.delete(id);
+      card.classList.remove('done');
+      if (XP_MAP[id]) XP_MAP[id].forEach(x => document.getElementById(x).classList.remove('earned'));
+    } else {
+      STATE.completed.add(id);
+      card.classList.add('done');
+      card.classList.remove('open');
+      if (XP_MAP[id]) XP_MAP[id].forEach(x => document.getElementById(x).classList.add('earned'));
+    }
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = STATE.completed.size;
+    document.getElementById('progressFill').style.width = (count / TOTAL * 100) + '%';
+    document.getElementById('progressCount').textContent = count + ' / ' + TOTAL;
+  }
+
+  // Download button
+  document.getElementById('downloadBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    fetch('CLAUDE.md')
+      .then(r => {
+        if (!r.ok) throw new Error('Could not load CLAUDE.md');
+        return r.text();
+      })
+      .then(text => {
+        const blob = new Blob([text], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'CLAUDE.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      })
+      .catch(() => {
+        alert('Could not load CLAUDE.md from this server. Ask your parent to check the file is in the same folder.');
+      });
+  });
+
+  // Open first card by default
+  document.getElementById('m1').classList.add('open');
 </script>
 </body>
 </html>
