@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luffy King Chess Piece — Setup Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #111;
+    --surface: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #eee;
+    --muted: #888;
+    --dim: #555;
+    --red: #e74c3c;
+    --blue: #3498db;
+    --green: #2ecc71;
+    --gold: #f1c40f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 40px 20px 100px;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  h1 span { color: var(--red); }
+
+  .tagline {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 40px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2 .step-num {
+    background: var(--red);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+
+  .card p:last-child { margin-bottom: 0; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: #222;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--gold);
+  }
+
+  .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px 0;
+    color: var(--green);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.5;
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+    margin: 8px 0;
+  }
+
+  .download-btn:hover { background: #c0392b; }
+
+  .download-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .note {
+    background: rgba(52,152,219,0.1);
+    border-left: 3px solid var(--blue);
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+  }
+
+  .note p { color: #a8c8e8; margin-bottom: 0; }
+  .note strong { color: var(--blue); }
+
+  .warn {
+    background: rgba(231,76,60,0.1);
+    border-left: 3px solid var(--red);
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+  }
+
+  .warn p { color: #e8a8a8; margin-bottom: 0; }
+  .warn strong { color: var(--red); }
+
+  .success {
+    background: rgba(46,204,113,0.1);
+    border-left: 3px solid var(--green);
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+  }
+
+  .success p { color: #a8e8c8; margin-bottom: 0; }
+  .success strong { color: var(--green); }
+
+  .checklist {
+    list-style: none;
+    margin: 16px 0;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .checklist li input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--green);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .phase-list {
+    list-style: none;
+    margin: 16px 0;
+    counter-reset: phase;
+  }
+
+  .phase-list li {
+    counter-increment: phase;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .phase-list li::before {
+    content: counter(phase);
+    background: var(--border);
+    color: var(--muted);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .phase-list li strong { color: var(--text); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  .goal {
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>The <span>King</span>: Luffy Chess Piece</h1>
+  <p class="tagline">Design and 3D print a King chess piece featuring Monkey D. Luffy. Everything happens in Claude Code.</p>
+
+  <p class="goal">By the end of this session, you'll have a print-ready STL file of a Luffy King chess piece that you designed.</p>
+
+  <hr class="divider">
+
+  <!-- STEP 1 -->
+  <h2><span class="step-num">1</span> Download the session file</h2>
+
+  <p>This file tells Claude Code everything it needs to know to run the session with you &mdash; how to generate concept art, convert it to 3D, and prepare it for printing.</p>
+
+  <a class="download-btn" id="downloadBtn" href="#">
+    <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    Download CLAUDE.md
+  </a>
+
+  <div class="note">
+    <p><strong>What is this file?</strong> It's instructions for Claude Code. When Claude Code opens in a folder that has a CLAUDE.md file, it reads it automatically and knows what to do. You don't need to read it yourself &mdash; just put it in the right place.</p>
+  </div>
+
+  <!-- STEP 2 -->
+  <h2><span class="step-num">2</span> Put it in the right folder</h2>
+
+  <p>Create a new folder for this session, then put the CLAUDE.md file inside it:</p>
+
+  <div class="code-block">Documents/
+  francisco-game-studio/
+    sessions/
+      chess-king-luffy/       <span style="color: var(--gold);">&larr; put CLAUDE.md here</span>
+        CLAUDE.md</div>
+
+  <p>If the folder already exists, just drop the file in. If not, create it.</p>
+
+  <div class="warn">
+    <p><strong>The file must be named exactly <code>CLAUDE.md</code></strong> (capital letters, no spaces). Claude Code only reads it if the name is exact.</p>
+  </div>
+
+  <!-- STEP 3 -->
+  <h2><span class="step-num">3</span> Open Claude Code in that folder</h2>
+
+  <p>Open your terminal and run:</p>
+
+  <div class="code-block">cd ~/Documents/francisco-game-studio/sessions/chess-king-luffy
+claude</div>
+
+  <p>Claude Code will start up and automatically read the CLAUDE.md. It knows the mission.</p>
+
+  <div class="note">
+    <p><strong>First time?</strong> Claude Code might need to set up the Meshy and Gemini connections. If it says something about "MCP not found" or asks your parent for an API key, that's normal &mdash; it just needs a quick setup. The instructions are in the CLAUDE.md.</p>
+  </div>
+
+  <!-- STEP 4 -->
+  <h2><span class="step-num">4</span> Start talking</h2>
+
+  <p>Claude Code will greet you and set the mission. Then it's a conversation. Here's what you'll do:</p>
+
+  <ol class="phase-list">
+    <li><strong>Describe your Luffy King.</strong> Tell Claude what you see &mdash; the pose, the outfit, the straw hat, the base. Claude asks questions to sharpen the picture. (~10 min)</li>
+    <li><strong>Generate concept art.</strong> Claude creates images based on your description. You say what's right and what to change. Iterate until it looks like YOUR Luffy. (~15 min)</li>
+    <li><strong>Convert to 3D.</strong> Claude sends your concept art to Meshy and builds a 3D model. You'll see it in a browser viewer you can rotate and check from every angle. (~10 min)</li>
+    <li><strong>Prep for printing.</strong> Claude resizes the model, exports it as STL, and repairs the mesh. You get a file ready to open in QIDIStudio and print. (~10 min)</li>
+  </ol>
+
+  <div class="success">
+    <p><strong>Total time: ~45 minutes.</strong> At the end you'll have a print-ready STL of a King chess piece that you designed. If you have time left, you can design another piece (Queen? Pawn? The enemy King?).</p>
+  </div>
+
+  <hr class="divider">
+
+  <h2>Things to think about before you start</h2>
+
+  <p>You don't need to decide everything now &mdash; Claude will ask you during the session. But it helps to have some ideas:</p>
+
+  <ul class="checklist">
+    <li><input type="checkbox"> <span><strong>Which Luffy?</strong> Pre-timeskip (red vest, blue shorts)? Post-timeskip (open shirt, chest scar)? Gear Fifth? Your own version?</span></li>
+    <li><input type="checkbox"> <span><strong>The straw hat.</strong> On his head? Tilted? Around his neck? This is the crown of the King piece.</span></li>
+    <li><input type="checkbox"> <span><strong>Pose.</strong> Standing tall like a captain? Arms crossed? Fist up? Remember: arms close to body print better.</span></li>
+    <li><input type="checkbox"> <span><strong>The base.</strong> Classic round chess pedestal? Ocean waves? Skull and crossbones? Something else?</span></li>
+    <li><input type="checkbox"> <span><strong>How tall?</strong> Standard King is ~9 cm. Bigger for a display piece? Smaller for a travel set?</span></li>
+  </ul>
+
+  <hr class="divider">
+
+  <h2>The bigger picture</h2>
+
+  <div class="card">
+    <p style="color: var(--text); font-weight: 500; margin-bottom: 8px;">This is the first piece of a One Piece chess set.</p>
+    <p>King = Luffy. Queen = Nami. Bishop = Zoro. Knight = Chopper. Rook = Going Merry. Pawn = Marines. Each one gets the same treatment: describe it, generate art, convert to 3D, print it. Today you start with the most important piece.</p>
+  </div>
+
+</div>
+
+<script>
+// Generate CLAUDE.md content for download
+const claudeMd = `PLACEHOLDER`;
+
+document.getElementById('downloadBtn').addEventListener('click', function(e) {
+  e.preventDefault();
+  // Fetch the CLAUDE.md from the same directory
+  fetch('CLAUDE.md')
+    .then(r => {
+      if (!r.ok) throw new Error('Could not load CLAUDE.md');
+      return r.text();
+    })
+    .then(text => {
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CLAUDE.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    })
+    .catch(() => {
+      alert('Could not load CLAUDE.md. Make sure the file is in the same folder as this page.');
+    });
+});
+</script>
+</body>
+</html>
